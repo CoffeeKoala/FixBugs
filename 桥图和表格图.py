@@ -208,3 +208,33 @@ for index,row in df_cond.iterrows():
 
 
 # 使用FuncFormatter应用自定义刻度
+
+# 桑基图
+
+import plotly.graph_objects as go
+
+# 定义节点和流量数据
+nodes = ["A", "B", "C", "D", "E"]  # 所有节点标签
+source = [0, 0, 1, 2, 3]           # 源节点索引（对应nodes列表）
+target = [2, 3, 4, 4, 4]           # 目标节点索引
+value =  [8, 4, 6, 2, 10]          # 流量值
+
+# 创建桑基图
+fig = go.Figure(go.Sankey(
+    node=dict(
+        pad=10 ,          # 节点间距
+        thickness=10,    # 节点宽度
+        label=nodes,     # 节点标签
+        color="skyblue"  # 节点颜色
+    ),
+    link=dict(
+        source=source,   # 源节点
+        target=target,   # 目标节点
+        value=value,     # 流量值
+        color="rgba(255,0,0,0.25)"  # 连接线颜色（半透明红色）
+    )
+))
+
+# 调整布局并显示
+fig.update_layout(title="桥图示例 - 数据流动桑基图", font_size=10)
+fig.show()
