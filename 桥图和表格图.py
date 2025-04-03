@@ -238,3 +238,79 @@ fig = go.Figure(go.Sankey(
 # 调整布局并显示
 fig.update_layout(title="桥图示例 - 数据流动桑基图", font_size=10)
 fig.show()
+
+
+
+import plotly.graph_objects as go
+
+# 示例数据（假设为某公司月度利润构成）
+categories = ["收入", "成本", "运营费用", "税费", "其他调整", "净利润"]
+values = [1200, -600, -300, 900, 150, None]  # None表示自动计算累计值
+
+measure = ["relative", "relative", "relative", "total", "relative", "total"]
+
+# 创建瀑布图
+fig = go.Figure(go.Waterfall(
+    name="2023年利润",
+    orientation="v", ## 'h'
+    x= categories,
+    y= values,
+#     textposition="auto",
+     textposition= 'outside',
+    
+    text=[f"+{v}" if v > 0 else str(v) for v in values[:-1]] + ["Total"],
+    
+    connector={"mode":"between","line": {"color": "gray" ,"dash":"solid"}},
+    base = 0,
+    measure=measure,
+    opacity = 0.75, ## 整体配色透明度
+    increasing={"marker": {"color": '#80B3B4', "line":{"color":"#327368", "width":2}}},   # 正值为绿色
+    decreasing={"marker": {"color": '#AF6F45', "line":{"color":'#BE4C49', "width":2}}},     # 负值为红色
+    totals={"marker": {"color": '#50543F','line':{'color':'#50543F','width':2}}}         # 总值为蓝色
+))
+
+# 调整布局
+fig.update_layout( 
+title={'text' : "利润构成瀑布图（单位：万元）"
+, 'font':{'color':'blue', 'family': 'KaiTi','size':18}
+,'x': 0.5 
+,'y': 0.85
+,'xanchor': 'center'
+}
+      
+# , xaxis_title="item"
+    
+, xaxis={
+        'title':  {'text': '项目','font':{'family':'KaiTi'}},
+        'tickvals': [0, 1, 2, 3, 4, 5],  # 显式指定刻度位置
+        'ticktext': categories,          # 显式指定刻度标签
+        'tickangle': 0,                # 标签旋转角度
+        'showgrid': False                # 隐藏网格线
+, 'tickfont': {
+    'family': "KaiTi",
+    'size': 12  ,
+    'color': 'darkgreen'
+    }   
+
+}
+    
+, yaxis_title="amt"
+, showlegend=False
+, waterfallgap = 0.35 ## 柱子和空格占比
+
+)
+
+fig.add_annotation(
+    x=0.7,
+    y=0.5,
+    text="注：税费包含企业所得税和增值税",
+    showarrow=False,
+    xref="paper",
+    yref="paper",
+    font={'size': 12, 'color': 'black','family':'KaiTi'}
+)
+
+
+# 显示图表
+fig.show()
+
